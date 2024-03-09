@@ -5,8 +5,12 @@ const schema = new mongoose.Schema({
         type : String,
         enum : ["Regular" , "Master"]
     },
-    layoutImageCloudinary : {
+    layoutMainImageCloudinary : {
         type : String,
+        required : true
+    },
+    layoutSubImagesCloudinary : {
+        type : [String],
         required : true
     }
 },{

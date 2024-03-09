@@ -26,7 +26,15 @@ const schema = new mongoose.Schema({
     hotelUnder : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Hotel'
+    },
+    floorUnder : {
+        type : Number
+    },
+    roomsUnder : {
+        type : [mongoose.Schema.Types.ObjectId],
+        ref : 'Room'
     }
+
 },{
     timestamps : true
 })
