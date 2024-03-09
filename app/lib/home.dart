@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:loc/Auth/room_info.dart';
+import 'package:loc/room_one_info.dart';
+import 'package:loc/room_two_info.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -44,8 +45,8 @@ class _HomeState extends State<Home> {
             return Card(
               child: InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Room()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Room1()));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
