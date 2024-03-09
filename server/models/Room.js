@@ -13,11 +13,12 @@ const schema = new mongoose.Schema({
         type : String,
         required : true
     },
-    
     mainInfo : [{
-        date : Date.now,
+        date :{
+            type : Date,
+            default : Date.now
+        },
 
-        divisions : {
             living_room : {
                 img : String,
                 telephone_working : Number,
@@ -44,7 +45,6 @@ const schema = new mongoose.Schema({
                 glasses : Number,
                 napkin : Number
             }
-        }
 
     }]
 

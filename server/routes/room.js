@@ -1,11 +1,10 @@
 const express = require("express");
-const { pushSubImage, createRoom , getRoomData , getFloorStatus} =  require("../controllers/room.js");
+const { pushDetails , getRoomData , getFloorStatus} =  require("../controllers/room.js");
 const  isAuthenticated  = require("../middlewares/auth.js");
-const isAdmin = require("../middlewares/level.js");
 const router = express.Router();
 
-router.post("/room/subImage/:roomId" , isAuthenticated , pushSubImage)
-router.get("/room/roomData/:index" , isAuthenticated , isAdmin , getRoomData);
+router.post("/room/details/:roomId" , isAuthenticated , pushDetails)
+router.get("/room/roomData/:index" , isAuthenticated , getRoomData);
 router.get("/room/floorStatus/:floorNo" , isAuthenticated , getFloorStatus);
 
 /*
@@ -16,9 +15,6 @@ room -> room.data
 staff->name , email 
 
 array of json : allocated rooms and how many done and not done
-
-
-
 
  */
 
