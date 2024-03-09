@@ -1,62 +1,35 @@
 import React, { useContext } from 'react';
 import myContext from '../context/myContext';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-  const { floorNo } = useContext(myContext);
-
-  // Assuming floorNo is used to determine the current floor in the array
-  const data = {
-    floors: [1, 2, 3, 4, 5],
-    rooms: [
-      // Assuming each floor has 3 rooms
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-      [10, 11, 12],
-      [13, 14, 15],
-    ],
-  };
-
-  const currentFloorData =
-    floorNo < data.floors.length ? data.rooms[floorNo] : [];
-
-  return (
-    <div className='w-[80vw] h-[70vh] m-auto mt-20 bg-red-100'>
-      <div className='flex h-full'>
-        {/* First Column */}
-        <div className='flex flex-col justify-between p-2'>
-          <div className='w-10 h-10 bg-white rounded-full'></div>
-          <div className='w-10 h-10 bg-white rounded-full'></div>
+    const navigate = useNavigate();
+    const { floorNo } = useContext(myContext);
+    const data = {
+        rooms: Array.from({ length: 6 }, () => Math.random() < 0.5)
+    }
+    return (
+        <>
+        {/* <div className='gradient w-full grid grid-cols-6 grid-rows-6 py-20 bg-red-100 text-3xl'>
+            {
+                [...Array(Math.pow(2,floorNo))].map((item, ind)=>ind+1).map((val,ind)=>{
+                    return (
+                        <div onClick={()=>{navigate(`/room/${floorNo}01`)}} className={`rooms ${data.rooms[1-1]?"bg-green-400":"bg-red-400"} cursor-pointer border-2 border-solid border-black flex items-center justify-center relative`} style={{rowSpan: ind%2!==0?6-ind:ind+1,columnSpan:ind%2===0?6-ind:ind+1}}>{floorNo}01</div>
+                    )
+                })
+            }
+            </div> */}
+        <div className='gradient w-[100vw] h-[92.5vh] m-auto py-20 bg-red-100 text-3xl'>
+            <div onClick={()=>{navigate(`/room/${floorNo}01`)}} className={`rooms ${data.rooms[1-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[12vh] w-[23vw] border-2 border-solid border-black flex items-center justify-center relative left-[52vw]`}>{floorNo}01</div>
+            <div onClick={()=>{navigate(`/room/${floorNo}02`)}} className={`rooms ${data.rooms[2-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[12vh] w-[23vw] border-2 border-solid border-black flex items-center justify-center relative left-[29.1vw] bottom-[12vh]`}>{floorNo}02</div>
+            <div onClick={()=>{navigate(`/room/${floorNo}03`)}} className={`rooms ${data.rooms[3-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[12vh] w-[23vw] border-2 border-solid border-black flex items-center justify-center relative left-[52vw]`}>{floorNo}03</div>
+            <div onClick={()=>{navigate(`/room/${floorNo}04`)}} className={`rooms ${data.rooms[4-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[32vh] w-[6vw] border-2 border-solid border-black flex items-center justify-center relative left-[23.2vw] bottom-[36vh]`}>{floorNo}04</div>
+            <div onClick={()=>{navigate(`/room/${floorNo}05`)}} className={`rooms ${data.rooms[5-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[32vh] w-[6vw] border-2 border-solid border-black flex items-center justify-center relative left-[23.2vw] bottom-[38.9vh]`}>{floorNo}05</div>
+            <div onClick={()=>{navigate(`/room/${floorNo}06`)}} className={`rooms ${data.rooms[6-1]?"bg-green-400":"bg-red-400"} cursor-pointer h-[32vh] w-[6vw] border-2 border-solid border-black flex items-center justify-center relative left-[46.1vw] bottom-[76vh]`}>{floorNo}06</div>
         </div>
-
-        {/* First Row Adjacent to First Column */}
-        <div className='flex flex-col flex-grow'>
-          <div className='w-10 h-10 bg-white rounded-full'></div>
-          {/* Empty space in the first row */}
-          <div className='w-10 h-10'></div>
-        </div>
-
-        {/* Third Column */}
-        <div className='flex flex-col justify-between p-2'>
-          <div className='w-10 h-10 bg-white rounded-full'></div>
-          {/* Adjacent to the third column */}
-          <div className='w-10 h-10'></div>
-        </div>
-      </div>
-
-      {/* Render floor-specific data */}
-      <div className='flex flex-wrap'>
-        {currentFloorData.map((roomNumber, index) => (
-          <div
-            key={index}
-            className='w-10 h-10 bg-blue-500 rounded-full m-1'
-          >
-            {roomNumber}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </>
+        
+    );
 };
 
 export default Home;

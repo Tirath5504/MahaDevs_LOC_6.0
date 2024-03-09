@@ -30,7 +30,7 @@ const Navbar = () => {
                         <select name="floor" id="floor" value={floorNo} onChange={(e) => { setFloorNo(e.target.value) }} className={`w-80 rounded-lg px-2 py-0.5 ${location!="/"?"invisible":""}`}>
                             {data.floors.map((ele, ind) => {
                                 return (
-                                    <option value={ele}>Floor {ele}</option>
+                                    <option key={ind} value={ele}>Floor {ele}</option>
                                 )
                             })}
                         </select>

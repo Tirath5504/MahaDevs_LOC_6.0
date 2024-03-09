@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 // import { useNavigate } from 'react-router-dom'
 import circlePlus from "../assets/circlePlus.png";
 import addStaff from "../assets/addStaff.gif";
-import "./css/CreateAStaff.css";
+import "./css/gradient.css";
 import SVGForCreateAStaff from './SVGForCreateAStaff';
 
 const CreateAStaff = () => {
@@ -22,7 +22,7 @@ const CreateAStaff = () => {
         rooms.current.appendChild(newInput);
     }
     return (
-        <div className="createastaff flex justify-between h-[92.5vh] ">
+        <div className="gradient flex justify-between h-[92.5vh] ">
 
             <div className='flex flex-col mt-4 pt-1 pb-4 sm:px-12 sm:py-4 space-y-4 text-lg sm:text-2xl to-red-500 w-[55vw]'>
                 <div className="input flex flex-col space-y-2">
