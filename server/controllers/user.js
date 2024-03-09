@@ -83,7 +83,7 @@ const logout = async (req, res , next) => {
 
 const createStaff = async(req , res , next) => {
 
-    const {name , email , password , staffID} = req.body;
+    const {name , email , password , staffID , floorUnder , roomsUnder} = req.body;
 
     try{
 
@@ -97,7 +97,7 @@ const createStaff = async(req , res , next) => {
             return next(new ErrorHandler("Only admins allowed to create new staff" , 400));
         }
 
-        const newStaff = await User.create({name , email , password , staffID , auth : "Staff"});
+        const newStaff = await User.create({name , email , password , staffID , auth : "Staff" , floorUnder , roomsUnder});
 
         res.json({
             success: true,

@@ -1,6 +1,3 @@
-const Hotel = require("../models/Hotel.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Room = require("../models/Room.js")
 const ErrorHandler = require("../utils/errorHandler.js");
 

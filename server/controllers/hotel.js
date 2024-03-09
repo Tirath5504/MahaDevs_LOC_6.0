@@ -1,6 +1,4 @@
 const Hotel = require("../models/Hotel.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const ErrorHandler = require("../utils/errorHandler.js");
 
 const createHotel = async(req, res , next)=>{
