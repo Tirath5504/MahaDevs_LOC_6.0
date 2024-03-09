@@ -1,43 +1,43 @@
 const Room = require("../models/Room.js")
 const ErrorHandler = require("../utils/errorHandler.js");
 
-const createRoom = async(req , res , next)=>{
-    try{
-        const { type , layoutMainImageCloudinary} = req.body;
+const pushDetails = async(req, res , next)=>{
 
-        if(req.isAdmin == false){
-            return next(new ErrorHandler("Only admin can add new room" , 400));
+    try{
+
+    const details = req.body;
+
+    const room = await Room.findOne({roomNo : details.roomNo});
+
+    const dateOfInput = details.date;
+
+    if(dateOfInput - room.mainInfo[room.mainInfo.length - 1].date <= 24 * 60 * 60 * 1000){
+        for(let key in details){
+        if(key == "roomNo" || key == "date") continue;
+        room.mainInfo[room.mainInfo.length - 1].key = details.key;
+        }
+    }
+
+    else{
+
+        const toPush = {
+            date : dateOfInput
         }
 
-        const room = await Room.create({type , layoutMainImageCloudinary});
-
-        res.json({
-            success : true,
-            message : "Room created successfully",
-            room
+        for(let key in details){
+            if(key == "roomNo" || key == "date") continue;
+            toPush.key = details.key
+        }
+ 
+        room.mainInfo.push({
+            toPush
         })
     }
-    catch(err){
-        return next(new ErrorHandler(err.message , 400));
-    }
-}
-
-const pushSubImage = async(req, res , next)=>{
-    try{
-      
-    const secureURL = req.secureURL;
-
-    const roomId = req.params.roomId;
-
-    await Room.findByIdAndUpdate(
-        roomId,
-        {
-            $push : {layoutSubImagesCloudinary : secureURL}
-        },
-    )
- res.status(200).json({
-    success : "true",
-  })
+ 
+    res.status(200).json({
+        success : "true",
+        room
+    })
 
 }
 catch(err){
@@ -45,4 +45,51 @@ catch(err){
 }
 };
 
-module.exports = {pushSubImage , createRoom};
+const getRoomData = async(req , res , next)=>{
+    
+    try{
+
+    const index = req.params.index;
+
+    const room = await Room.findOne({roomNo : index});
+
+    res.status(200).json({
+        success : "true",
+        room
+    })
+}
+catch(err){
+    return next(new ErrorHandler(err.message , 400));
+}
+}
+
+const getFloorStatus = async(req , res , next)=>{
+    try{
+        const floorNo = req.params.floorNo;
+
+        const result = [];
+
+        const key = 100 * floorNo;
+
+        for(let i = 1 ; i <= 6 ; ++i){
+            const room = await Room.findOne({roomNo : key + i});
+            console.log(key + i);
+
+            const dateOfLast = room.mainInfo[room.mainInfo.length - 1].date;
+
+            result.push(Date.now() - dateOfLast <= 24 * 60 * 60 * 1000 ? 1 : 0);
+        }
+
+        res.status(200).json({
+            success : "true",
+            result
+        })
+
+    }
+
+    catch(err){
+        return next(new ErrorHandler(err.message , 400));
+    }
+}
+
+module.exports = { pushDetails , getRoomData , getFloorStatus};

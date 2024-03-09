@@ -1,0 +1,44 @@
+USER :
+NAME
+EMAIL
+PASSWORD
+isAdmin
+ROOMS UNDER
+
+
+
+ROOM:
+TYPE
+ROOM NO
+DEFAULT IMG LINK
+ARRAY OF DICT{
+ date : _,
+ divisions : {
+  LIVING ROOM :{
+  img : img link,
+  obj : obj count
+  telephone working
+  coffee maker
+  fridge
+  water?
+  menu card
+},
+ WASHROOM :{
+    towels
+    soap
+    hair dryer
+    hot water
+    flush
+
+ },
+ BEDROOM: {
+    pillow
+    bedsheets
+ },
+ DINING ROOM : {
+    plates glasses napkin       
+    
+ }
+}
+	}
+}

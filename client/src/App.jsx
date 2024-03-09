@@ -5,6 +5,7 @@ import CreateAStaff from "./components/CreateAStaff";
 import Staffs from "./components/Staffs";
 import Report from "./components/Report";
 import Profile from "./components/Profile";
+import Room from "./components/Room";
 import {
   BrowserRouter as Router,
   Routes,
@@ -46,6 +47,12 @@ function App() {
               <>
                 <Navbar />
                 <Profile />
+              </>
+            } />
+            <Route exact path="/room/:roomNo" element={
+              <>
+                <Navbar />
+                <Room/>
               </>
             } />
           </Routes>
