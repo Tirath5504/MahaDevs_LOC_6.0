@@ -2,7 +2,7 @@ import React from 'react'
 
 const Report = () => {
     return (
-        <div>
+        <div className='h-[92.5vh] gradient'>
 
         </div>
     )
