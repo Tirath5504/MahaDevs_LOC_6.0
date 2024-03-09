@@ -10,8 +10,8 @@ const okEmail = /(\w+[\.\-\_]?)*\w\@(\w+\-)*(\w+\.)+\w+/;
 const login = async(req, res , next)=>{
   try{
 
-  const {staffID , password} = req.body;
-  const user = await User.findOne({ staffID });
+  const {email , password } = req.body;
+  const user = await User.findOne({ email });
 
   if (!user) return next(new ErrorHandler("User does not exist" , 400));
 
@@ -26,8 +26,8 @@ const login = async(req, res , next)=>{
 
   res.status(200).json({
     success : "true",
+    user,
     authToken,
-    isAdmin : user.auth === "Admin"
   })
 
 }
@@ -38,7 +38,7 @@ catch(err){
 
 const register = async(req, res , next)=>{
 
-  const { name, email, password , staffID , auth } = req.body;
+  const { name, email , password } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -55,7 +55,7 @@ const register = async(req, res , next)=>{
 
     const hashedPassword =  await bcrypt.hash(password, process.env.SALT);
 
-    user = await User.create({ name, email, password: hashedPassword , staffID , auth });
+    user = await User.create({ name, email, password: hashedPassword , isAdmin : true , roomsUnder : []});
 
     const authToken = jwt.sign({ user_id: user._id }, process.env.JWT_SECRET ); 
 
@@ -83,7 +83,7 @@ const logout = async (req, res , next) => {
 
 const createStaff = async(req , res , next) => {
 
-    const {name , email , password , staffID , floorUnder , roomsUnder} = req.body;
+    const {name , email , password , roomsUnder} = req.body;
 
     try{
 
@@ -93,16 +93,16 @@ const createStaff = async(req , res , next) => {
 
       console.log(user);
 
-        if(req.isAdmin == false){
+        if(user.isAdmin == false){
             return next(new ErrorHandler("Only admins allowed to create new staff" , 400));
         }
 
-        const newStaff = await User.create({name , email , password , staffID , auth : "Staff" , floorUnder , roomsUnder});
+        const newStaff = await User.create({name , email , password , isAdmin : false , roomsUnder});
 
         res.json({
             success: true,
             message: "New staff added successfully",
-            isAdmin : req.isAdmin,
+            newStaff
           });
     }
 
@@ -111,4 +111,18 @@ const createStaff = async(req , res , next) => {
       }
 }
 
-module.exports = {login , register , logout , createStaff};
+const deleteStaff = async(req , res , next)=>{
+
+    const staffToDelete = await User.findById(req.params.staffID);
+
+    await User.deleteOne({_id : req.params.staffID});
+
+    res.status(201).send({
+      success : true,
+      message : "Staff deleted successfully",
+      staffToDelete
+    })
+      
+}
+
+module.exports = {login , register , logout , createStaff , deleteStaff};

@@ -14,25 +14,12 @@ const schema = new mongoose.Schema({
         type : String,
         required:true,
     },
-    staffID : {
-        type : String,
-        required : true
-    },
-    auth : {
-        type : String,
-        enum : ['Staff' , 'Admin'],
-        required : true
-    },
-    hotelUnder : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Hotel'
-    },
-    floorUnder : {
-        type : Number
+    isAdmin :{
+        type : Boolean,
+        required : true,
     },
     roomsUnder : {
-        type : [mongoose.Schema.Types.ObjectId],
-        ref : 'Room'
+        type : [Number],
     }
 
 },{
