@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import myContext from '../context/myContext';
 
 const Login = () => {
     const navigate = useNavigate();
+    const {login} = useContext(myContext);
     const [data, setData] = useState({ email: "", password: "" })
     const onChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     }
     const handleLogin = ()=>{
-        // console.log(data);
-        navigate('/');
+        login(data);
     }
     return (
         <div className='flex flex-col pt-4 sm:px-12 sm:py-20 space-y-4 text-lg sm:text-2xl'>
