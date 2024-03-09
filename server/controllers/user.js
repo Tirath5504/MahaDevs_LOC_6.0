@@ -93,7 +93,7 @@ const createStaff = async(req , res , next) => {
 
       console.log(user);
 
-        if(user.auth == "Staff"){
+        if(req.isAdmin == false){
             return next(new ErrorHandler("Only admins allowed to create new staff" , 400));
         }
 
@@ -102,7 +102,7 @@ const createStaff = async(req , res , next) => {
         res.json({
             success: true,
             message: "New staff added successfully",
-            newStaff,
+            isAdmin : req.isAdmin,
           });
     }
 

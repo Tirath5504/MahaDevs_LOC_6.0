@@ -6,6 +6,10 @@ const createHotel = async(req, res , next)=>{
 
   const {name , admin , staffIDS , location , numFloors , numRooms , rooms} = req.body;
 
+  if(req.isAdmin == false){
+    return next(new ErrorHandler("Only admin can add a new hotel" , 400));
+  }
+
   const hotel = new Hotel({ 
     name,
     admin,

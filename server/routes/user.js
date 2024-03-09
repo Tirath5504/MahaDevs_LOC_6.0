@@ -1,15 +1,16 @@
 const express = require("express");
 const { register , login , logout , createStaff} =  require("../controllers/user.js");
 const  isAuthenticated  = require("../middlewares/auth.js");
+const isAdmin = require("../middlewares/level.js");
 const router = express.Router();
 
-router.post("/register" , register)
+router.post("/user/register" , register)
 
-router.post("/login" , login)
+router.post("/user/login" , login)
 
-router.get("/logout" , isAuthenticated , logout);
+router.get("/user/logout" , isAuthenticated , logout);
 
-router.post("/createStaff" , isAuthenticated , createStaff);
+router.post("/user/createStaff" , isAuthenticated , isAdmin , createStaff);
 
 module.exports =  router;
 

@@ -5,6 +5,10 @@ const createRoom = async(req , res , next)=>{
     try{
         const { type , layoutMainImageCloudinary} = req.body;
 
+        if(req.isAdmin == false){
+            return next(new ErrorHandler("Only admin can add new room" , 400));
+        }
+
         const room = await Room.create({type , layoutMainImageCloudinary});
 
         res.json({
@@ -41,4 +45,4 @@ catch(err){
 }
 };
 
-module.exports = {pushSubImage};
+module.exports = {pushSubImage , createRoom};
