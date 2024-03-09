@@ -10,43 +10,46 @@ import {
   Routes,
   Route
 } from 'react-router-dom';
+import MyState from "./context/MyState";
 function App() {
   return (
     <>
       <Router>
-        <Routes>
-          <Route exact path="/loginsignup" element={<LoginSignup />} />
-          <Route exact path="/" element={
-            <>
-              <Navbar />
-              <Home />
-            </>
-          } />
-          <Route exact path="/createastaff" element={
-            <>
-              <Navbar />
-              <CreateAStaff />
-            </>
-          } />
-          <Route exact path="/staffsdetails" element={
-            <>
-              <Navbar />
-              <Staffs />
-            </>
-          } />
-          <Route exact path="/report" element={
-            <>
-              <Navbar />
-              <Report />
-            </>
-          } />
-          <Route exact path="/profile" element={
-            <>
-              <Navbar />
-              <Profile />
-            </>
-          } />
-        </Routes>
+        <MyState>
+          <Routes>
+            <Route exact path="/loginsignup" element={<LoginSignup />} />
+            <Route exact path="/" element={
+              <>
+                <Navbar />
+                <Home />
+              </>
+            } />
+            <Route exact path="/createastaff" element={
+              <>
+                <Navbar />
+                <CreateAStaff />
+              </>
+            } />
+            <Route exact path="/staffsdetails" element={
+              <>
+                <Navbar />
+                <Staffs />
+              </>
+            } />
+            <Route exact path="/report" element={
+              <>
+                <Navbar />
+                <Report />
+              </>
+            } />
+            <Route exact path="/profile" element={
+              <>
+                <Navbar />
+                <Profile />
+              </>
+            } />
+          </Routes>
+        </MyState>
       </Router>
     </>
   )

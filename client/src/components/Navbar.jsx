@@ -1,10 +1,16 @@
-import React, { useRef } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom';
+import myContext from '../context/myContext';
 const Navbar = () => {
+    const { floorNo, setFloorNo } = useContext(myContext);
     const navList = useRef();
     const handleBurgerClick = () => {
         navList.current.classList.toggle('-translate-x-[640px]')
     }
+    const data = {
+        floors: [5, 4, 3, 2, 1]
+    }
+    const location = useLocation().pathname;
     return (
         <nav className='h-14 bg-purple-400 sticky inset-0'>
             <div onClick={handleBurgerClick} className="cursor-pointer burger absolute top-4 left-4 sm:hidden flex flex-col space-y-1">
@@ -20,6 +26,15 @@ const Navbar = () => {
                     <Link to='/profile' className='transition delay-75 px-4 py-2 hover:bg-white hover:text-purple-400 rounded-2xl'>
                         <i className="fa-solid fa-user"></i>
                     </Link>
+                    {
+                        <select name="floor" id="floor" value={floorNo} onChange={(e) => { setFloorNo(e.target.value) }} className={`w-80 rounded-lg px-2 py-0.5 ${location!="/"?"invisible":""}`}>
+                            {data.floors.map((ele, ind) => {
+                                return (
+                                    <option value={ele}>Floor {ele}</option>
+                                )
+                            })}
+                        </select>
+                    }
 
                 </div>
                 <div className="others sm:space-x-6">
