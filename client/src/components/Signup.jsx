@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import myContext from '../context/myContext';
 
 const Signup = () => {
     const navigate = useNavigate();
+    const { signupAdmin } = useContext(myContext);
     const [data, setData] = useState({ name: "", email: "", password: "", confirmPassword: "" })
     const onChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     }
     const handleSignup = () => {
-        // console.log(data);
-        navigate('/');
+        if (data.password !== data.confirmPassword) {
+            alert('Password And Confirm Should Be Same!!!');
+            return;
+        }
+        signupAdmin(data);
     }
     return (
         <div className='flex flex-col pt-1 pb-4 sm:px-12 sm:py-4 space-y-4 text-lg sm:text-2xl'>

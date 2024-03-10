@@ -1,56 +1,57 @@
 const mongoose = require("mongoose")
 
-const schema = new mongoose.Schema({ 
-    type:{
-        type : String,
-        enum : ["Regular" , "Master"]
+const schema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ["Regular", "Master"]
     },
-    roomNo:{
-        type : Number,
-        required:true,
+    roomNo: {
+        type: Number,
+        required: true,
     },
-    layoutMainImageCloudinary : {
-        type : String,
-        required : true
+    layoutMainImageCloudinary: {
+        type: String,
+        required: true
     },
-    mainInfo : [{
-        date :{
-            type : Date,
-            default : Date.now
+    mainInfo: [{
+        date: {
+            type: Date,
+            default: Date.now
         },
 
-            living_room : {
-                img : String,
-                telephone_working : Number,
-                coffee_maker : Number,
-                fridge : Number,
-                water : Number,
-                menu_card : Number
-            },
-            washroom : {
-                img : String,
-                towels : Number,
-                soap : Number,
-                hair_dryer : Number,
-                hot_water : Number,
-                flush : Number
-            },
-            bedroom : {
-                img : String,
-                pillow : Number,
-                bedsheets : Number
-            },
-            dining_room : {
-                plates : Number,
-                glasses : Number,
-                napkin : Number
-            }
+        livingRoom: {
+            img: String,
+            Telephone: Number,
+            'Coffee Maker': Number,
+            Fridge: Number,
+            Water: Number,
+            'Menu Card': Number
+        },
+        washRoom: {
+            img: String,
+            Towels: Number,
+            Soap: Number,
+            'Hair Dryer': Number,
+            'Hot Water': Number,
+            Flush: Number
+        },
+        bedRoom: {
+            img: String,
+            Pillows: Number,
+            'Bed Sheets': Number
+        },
+        diningRoom: {
+            img:String,
+            Plates: Number,
+            Glasses: Number,
+            Napkin: Number
+        }
 
     }]
 
-},{
-    timestamps : true
+}, {
+    timestamps: true
 })
 
-module.exports = mongoose.model("Room" , schema)
+module.exports = mongoose.model("Room", schema)
 

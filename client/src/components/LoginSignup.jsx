@@ -14,8 +14,8 @@ const LoginSignup = () => {
                 <div className="bg-purple-200 h-[90%] w-[100%] sm:h-[100%] sm:w-[60%] flex justify-center rounded-b-xl sm:rounded-bl-none sm:rounded-r-xl items-center overflow-auto">
                     <div className='bg-purple-200 h-[90%] w-[90%] rounded-xl'>
                         <div className="buttons flex justify-around sm:mt-2 md:mt-3 xl:mt-4">
-                            <button className={`text-xl sm:text-2xl bg-purple-${!isLogin ? "300" : "400"} px-4 py-2 rounded-xl w-[45%]`} onClick={() => { setIsLogin(false) }}>Sign Up Admin</button>
-                            <button className={`text-xl sm:text-2xl bg-purple-${!isLogin ? "400" : "300"} px-4 py-2 rounded-xl w-[45%]`} onClick={() => { setIsLogin(true) }}>Login User</button>
+                            <button className={`text-xl sm:text-2xl bg-purple-${isLogin ? "300" : "400"} px-4 py-2 rounded-xl w-[45%]`} onClick={() => { setIsLogin(false) }}>Sign Up Admin</button>
+                            <button className={`text-xl sm:text-2xl bg-purple-${isLogin ? "400" : "300"} px-4 py-2 rounded-xl w-[45%]`} onClick={() => { setIsLogin(true) }}>Login User</button>
                         </div>
                         <div className="mainBox">
                             {isLogin ? <Login /> : <Signup />}
