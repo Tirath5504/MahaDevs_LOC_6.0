@@ -48,7 +48,10 @@ const pushDetails = async (req, res, next) => {
         return next(new ErrorHandler(err.message, 400));
     }
 };
-
+const getAllData = async (req, res, next) => {
+    const data = await Room.find({});
+    return res.json({ success: true, data });
+}
 const getRoomData = async (req, res, next) => {
 
     try {
@@ -56,10 +59,14 @@ const getRoomData = async (req, res, next) => {
         const index = req.params.index;
 
         const room = await Room.findOne({ roomNo: index });
-
+        let roomData = {};
+        if (room.mainInfo.length > 0)
+            roomData = room.mainInfo[room.mainInfo.length - 1];
+        else
+            return res.json({ success: false });
         res.status(200).json({
             success: "true",
-            room
+            room: roomData
         })
     }
     catch (err) {
@@ -77,10 +84,12 @@ const getFloorStatus = async (req, res, next) => {
 
         for (let i = 1; i <= 6; ++i) {
             const room = await Room.findOne({ roomNo: key + i });
-
-            const dateOfLast = room.mainInfo[room.mainInfo.length - 1].date;
-
-            result.push(Date.now() - dateOfLast <= 24 * 60 * 60 * 1000 ? 1 : 0);
+            if (room.mainInfo.length == 0)
+                result.push(false);
+            else {
+                const dateOfLast = room.mainInfo[room.mainInfo.length - 1].date;
+                result.push((Date.now() - dateOfLast) <= 24 * 60 * 60 * 1000);
+            }
         }
 
         res.status(200).json({
@@ -95,4 +104,4 @@ const getFloorStatus = async (req, res, next) => {
     }
 }
 
-module.exports = { pushDetails, getRoomData, getFloorStatus };
+module.exports = { pushDetails, getRoomData, getFloorStatus ,getAllData};

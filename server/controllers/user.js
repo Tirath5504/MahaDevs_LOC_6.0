@@ -2,6 +2,7 @@ const User = require("../models/User.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const ErrorHandler = require("../utils/errorHandler.js");
+const Room = require("../models/Room.js");
 
 const passOkChars = /([a-z])+([A-Z])+([0-9])+([^a-zA-Z0-9])+/;
 const passOkLen = /^\w{8,16}$/;
@@ -73,6 +74,23 @@ const register = async (req, res, next) => {
   }
 };
 
+const getStaff = async (req, res, next) => {
+  let user = await User.findById(req.user.user_id);
+  if (!user) return next(new ErrorHandler("Staff Not Exist!!", 404));
+  let roomsUnder = {}
+  for (const room of user.roomsUnder) {
+    const roomData = await Room.findOne({ roomNo: room });
+    roomsUnder[room] = !(roomData.mainInfo.length == 0 || (Date.now() - roomData.mainInfo[roomData.mainInfo.length - 1].date) >= (24 * 60 * 60 * 1000));
+  }
+  console.log(roomsUnder);
+  let staff = { email: user.email, name: user.name, isAdmin: user.isAdmin, roomsUnder };
+  res.json({ success: true, user: staff });
+}
+
+const getAllStaff = async (req, res, next) => {
+  const staff = await User.find({ isAdmin: false });
+  res.send({ success: true, staff });
+}
 
 const logout = async (req, res, next) => {
   res.json({
@@ -113,9 +131,9 @@ const createStaff = async (req, res, next) => {
 }
 
 const deleteStaff = async (req, res, next) => {
-
+  console.log(req.params.staffID);
   const staffToDelete = await User.findById(req.params.staffID);
-
+  if (!staffToDelete) return next(new ErrorHandler("Staff Not Exist!!", 400));
   await User.deleteOne({ _id: req.params.staffID });
 
   res.status(201).send({
@@ -126,4 +144,4 @@ const deleteStaff = async (req, res, next) => {
 
 }
 
-module.exports = { login, register, logout, createStaff, deleteStaff };
+module.exports = { login, register, logout, createStaff, deleteStaff, getStaff, getAllStaff };

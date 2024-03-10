@@ -37,10 +37,11 @@ const schema = new mongoose.Schema({
         },
         bedRoom: {
             img: String,
-            Pillow: Number,
+            Pillows: Number,
             'Bed Sheets': Number
         },
         diningRoom: {
+            img:String,
             Plates: Number,
             Glasses: Number,
             Napkin: Number
