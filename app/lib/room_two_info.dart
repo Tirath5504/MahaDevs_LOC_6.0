@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:image_picker/image_picker.dart';
 
 class Room1 extends StatefulWidget {
-  const Room1({Key? key}) : super(key: key);
+  const Room1({Key? key, required String roomNumber}) : super(key: key);
 
   @override
   State<Room1> createState() => _Room1State();

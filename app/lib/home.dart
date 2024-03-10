@@ -87,14 +87,16 @@ class _HomeState extends State<Home> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                Room())); // Room1() or Room2() based on your requirement
+                            builder: (context) => Room(
+                                roomNumber:
+                                    roomNumber))); // Room1() or Room2() based on your requirement
                   } else {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                Room1())); // Room1() or Room2() based on your requirement
+                            builder: (context) => Room1(
+                                roomNumber:
+                                    roomNumber))); // Room1() or Room2() based on your requirement
                   }
                 },
                 child: Padding(
