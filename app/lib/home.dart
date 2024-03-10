@@ -1,52 +1,101 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:loc/room_one_info.dart';
 import 'package:loc/room_two_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  List<Map<String, dynamic>> roomData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('authToken');
+
+    if (authToken == null) {
+      return;
+    }
+    print(authToken);
+    final response = await http.get(
+      Uri.parse('https://loc-2024-backend.onrender.com/user/getStaff'),
+      headers: {
+        'authToken': authToken,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      final user = jsonData['user'];
+      final roomsUnder = user['roomsUnder'];
+
+      List<Map<String, dynamic>> tempRoomData = [];
+      roomsUnder.forEach((roomNumber, dailyRoutineCompleted) {
+        tempRoomData.add({
+          'roomNumber': roomNumber,
+          'dailyRoutineCompleted': dailyRoutineCompleted
+        });
+      });
+
+      setState(() {
+        roomData = tempRoomData;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: const MaterialColor(
-          0xFFC706F7,
-          <int, Color>{
-            50: Color(0xFFFCEAEF),
-            100: Color(0xFFF9D3DE),
-            200: Color(0xFFF6BCCD),
-            300: Color(0xFFF3A5BA),
-            400: Color(0xFFF08EA7),
-            500: Color(0xFFC706F7),
-            600: Color(0xFFA004E0),
-            700: Color(0xFF7902C9),
-            800: Color(0xFF5200B2),
-            900: Color(0xFF2B009B),
-          },
-        ),
-        scaffoldBackgroundColor: Colors.black87,
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.white),
-        ),
-      ),
       home: Scaffold(
         body: ListView.builder(
           itemCount: roomData.length,
           itemBuilder: (context, index) {
             final room = roomData[index];
+            final roomNumber = room['roomNumber'] as String;
+            final isCompleted = room['dailyRoutineCompleted'] as bool;
+            final roomType = roomNumber.endsWith('1') ||
+                    roomNumber.endsWith('2') ||
+                    roomNumber.endsWith('3')
+                ? 'room.png'
+                : 'room_one.png';
+
             return Card(
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Room1()));
+                  if (!isCompleted &&
+                      (roomNumber.endsWith('1') ||
+                          roomNumber.endsWith('2') ||
+                          roomNumber.endsWith('3'))) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Room())); // Room1() or Room2() based on your requirement
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Room1())); // Room1() or Room2() based on your requirement
+                  }
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -64,7 +113,7 @@ class _HomeState extends State<Home> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.asset(
-                            'assets/images/room_one.png',
+                            'assets/images/$roomType',
                             width: screenWidth * 0.25,
                             height: screenHeight * 0.15,
                             fit: BoxFit.cover,
@@ -77,7 +126,7 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              room['roomNumber'],
+                              roomNumber,
                               style: const TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.bold,
@@ -91,7 +140,7 @@ class _HomeState extends State<Home> {
                             const SizedBox(height: 4.0),
                             Row(
                               children: [
-                                room['dailyRoutineCompleted']
+                                isCompleted
                                     ? Icon(
                                         Icons.check_circle,
                                         color: Colors.green,
@@ -104,14 +153,11 @@ class _HomeState extends State<Home> {
                                       ),
                                 const SizedBox(width: 8.0),
                                 Text(
-                                  room['dailyRoutineCompleted']
-                                      ? 'Completed'
-                                      : 'Not Completed',
+                                  isCompleted ? 'Completed' : 'Not Completed',
                                   style: TextStyle(
                                     fontSize: 12.0,
-                                    color: room['dailyRoutineCompleted']
-                                        ? Colors.green
-                                        : Colors.red,
+                                    color:
+                                        isCompleted ? Colors.green : Colors.red,
                                   ),
                                 ),
                               ],
@@ -130,15 +176,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-final List<Map<String, dynamic>> roomData = [
-  {'roomNumber': 'Room 101', 'dailyRoutineCompleted': true},
-  {'roomNumber': 'Room 102', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 103 ', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 104', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 105', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 106', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 107', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 108', 'dailyRoutineCompleted': false},
-  {'roomNumber': 'Room 109', 'dailyRoutineCompleted': false},
-];

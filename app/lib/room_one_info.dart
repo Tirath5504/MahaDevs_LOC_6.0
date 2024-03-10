@@ -1,7 +1,8 @@
-import 'dart:ui';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class Room extends StatefulWidget {
@@ -15,28 +16,58 @@ class _RoomState extends State<Room> {
   final double buttonSize = 50.0;
   final Color buttonColor = Colors.blue;
 
-  // Checkboxes state for button 1
+  // Checkboxes state for buttons
   bool towelsChecked = false;
   bool soapChecked = false;
   bool shampooChecked = false;
-
-  // Checkboxes state for button 2
   bool pillowsChecked = false;
   bool bedSheetChecked = false;
-
-  // Checkboxes state for button 3
   bool coffeeMakerChecked = false;
   bool refrigeratorChecked = false;
   bool tvRemoteChecked = false;
   bool acRemoteChecked = false;
 
+  late File _imageFile;
+
   Future<void> _openCamera() async {
     final imagePicker = ImagePicker();
-    final XFile? image =
-        await imagePicker.pickImage(source: ImageSource.camera);
-    // You can use the 'image' variable to do something with the captured image
-    if (image != null) {
-      // Do something with the captured image
+    try {
+      final XFile? image =
+          await imagePicker.pickImage(source: ImageSource.camera);
+      if (image != null) {
+        setState(() {
+          _imageFile = File(image.path);
+        });
+        _uploadImageToCloudinary();
+      }
+    } catch (e) {
+      print('Error capturing image: $e');
+    }
+  }
+
+  Future<void> _uploadImageToCloudinary() async {
+    final uri =
+        Uri.parse("https://api.cloudinary.com/v1_1/dstefsngu/image/upload");
+    final request = http.MultipartRequest('POST', uri)
+      ..fields['upload_preset'] = 'locpreset'
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        _imageFile.path,
+        filename: 'image.jpg',
+      ));
+
+    try {
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseJson = await response.stream.bytesToString();
+        print('Image uploaded successfully!');
+        print('Image URL: $responseJson');
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error uploading image: $error');
     }
   }
 
@@ -46,7 +77,6 @@ class _RoomState extends State<Room> {
       body: Center(
         child: Stack(
           children: [
-            // Positioned.fill for the image
             Positioned.fill(
               child: Transform.rotate(
                 angle: pi / 2,
@@ -73,7 +103,7 @@ class _RoomState extends State<Room> {
                           return StatefulBuilder(
                             builder: (context, setState) {
                               return AlertDialog(
-                                title: Text('Washroom'),
+                                title: Text('WashRoom'),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +183,7 @@ class _RoomState extends State<Room> {
                           return StatefulBuilder(
                             builder: (context, setState) {
                               return AlertDialog(
-                                title: Text('Bed Area'),
+                                title: Text('BedRoom'),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +253,7 @@ class _RoomState extends State<Room> {
                           return StatefulBuilder(
                             builder: (context, setState) {
                               return AlertDialog(
-                                title: Text('TV Unit Area'),
+                                title: Text('LivingRoom'),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
