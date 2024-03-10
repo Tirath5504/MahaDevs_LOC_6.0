@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:loc/home.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CircleWidget extends StatelessWidget {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  CircleWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -65,9 +73,10 @@ class CircleWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
+                controller: emailController,
                 style: TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
-                  labelText: 'User ID',
+                  labelText: 'Email',
                   labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -77,6 +86,7 @@ class CircleWidget extends StatelessWidget {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.015),
               TextField(
+                controller: passwordController,
                 style: TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -92,11 +102,41 @@ class CircleWidget extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.55,
                 height: MediaQuery.of(context).size.height * 0.05,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                  onPressed: () async {
+                    final email = emailController.text;
+                    final password = passwordController.text;
+
+                    if (email.isEmpty || password.isEmpty) {
+                      print('Error: Email and password cannot be empty');
+                      return;
+                    }
+                    print('Email: $email');
+                    print('Password: $password');
+                    final response = await http.post(
+                      Uri.parse(
+                          'https://loc-2024-backend.onrender.com/user/login'),
+                      headers: <String, String>{
+                        'Content-Type': 'application/json; charset=UTF-8',
+                      },
+                      body: jsonEncode(<String, String>{
+                        'email': email,
+                        'password': password,
+                      }),
                     );
+                    if (response.statusCode == 200) {
+                      final jsonData = jsonDecode(response.body);
+                      final authToken = jsonData['authToken'];
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString('authToken', authToken);
+                      print(authToken);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    } else {
+                      print('Error {$response}');
+                      // Handle login error (display error message or retry options)
+                    }
                   },
                   child: Text('Sign In', style: TextStyle(fontSize: 16)),
                   style: ElevatedButton.styleFrom(
@@ -150,7 +190,7 @@ class SignIn extends StatelessWidget {
             ],
           ),
         ),
-        child: CircleWidget(),
+        child: SingleChildScrollView(child: CircleWidget()),
       ),
     );
   }
