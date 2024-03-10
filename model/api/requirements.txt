@@ -1,0 +1,9 @@
+gradio
+numpy
+tensorflow
+keras
+fastapi
+requests
+Pillow
+uvicorn
+io
