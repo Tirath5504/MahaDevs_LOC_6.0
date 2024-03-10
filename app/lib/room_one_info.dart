@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class Room extends StatefulWidget {
-  const Room({Key? key}) : super(key: key);
+  final String roomNumber;
 
+  // Constructor with named parameter
+  Room({Key? key, required this.roomNumber}) : super(key: key);
   @override
   State<Room> createState() => _RoomState();
 }
